@@ -18,7 +18,7 @@
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:textStyle="bold"
+        android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="@+id/user_profile_image_user_to_row"
         app:layout_constraintStart_toEndOf="@+id/user_profile_image_user_to_row"
         app:layout_constraintTop_toTopOf="@+id/user_profile_image_user_to_row"/>
@@ -27,7 +27,7 @@
         android:id="@+id/user_profile_image_user_to_row"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
