@@ -15,6 +15,8 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
+
+//Encrypt the text in chatmessage class before sending it to firebase and decrypt while extracting the text from firebase
 class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +44,6 @@ class RegisterActivity : AppCompatActivity() {
             startActivityForResult(intent, 0)
 
         }
-
 
 
     }
@@ -77,17 +78,17 @@ class RegisterActivity : AppCompatActivity() {
 
         //Firebase Authentication
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                if(!it.isSuccessful) return@addOnCompleteListener
+                .addOnCompleteListener {
+                    if(!it.isSuccessful) return@addOnCompleteListener
 
-                //else
-                Toast.makeText(this, "Successfully created user with uid : ${it.result?.user?.uid}", Toast.LENGTH_SHORT).show()
+                    //else
+                    Toast.makeText(this, "Successfully created user with uid : ${it.result?.user?.uid}", Toast.LENGTH_SHORT).show()
 
-                uploadImageToFirebaseStorage()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Failed to create User! Try Again", Toast.LENGTH_SHORT).show()
-            }
+                    uploadImageToFirebaseStorage()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Failed to create User! Try Again", Toast.LENGTH_SHORT).show()
+                }
 
     }
 
