@@ -9,6 +9,7 @@ import android.view.MenuItem
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.messengerapplication.Models.ChatMessage
 import com.example.messengerapplication.Models.User
+import com.example.messengerapplication.encryption.hexToByteArray
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
@@ -19,6 +20,9 @@ import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_messenger.*
 import kotlinx.android.synthetic.main.latest_messages_row.view.*
+import java.security.KeyStore
+import javax.crypto.Cipher
+import javax.crypto.spec.GCMParameterSpec
 import kotlin.math.PI
 
 class MessengerActivity : AppCompatActivity() {
@@ -98,12 +102,12 @@ class MessengerActivity : AppCompatActivity() {
         var chatPartenerUser : User? = null
 
         override fun bind(viewHolder: ViewHolder, position: Int) {
-            viewHolder.itemView.message_latest_message_row.text = chatMessage.text
-            val chatPartenerId : String
+            //decrypted Text
+            viewHolder.itemView.message_latest_message_row.text = dec(chatMessage.text.toString().hexToByteArray(), chatMessage.ivBytes.toString().hexToByteArray())
+            val chatPartenerId: String
             if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
                 chatPartenerId = chatMessage.toId
-            }
-            else{
+            } else {
                 chatPartenerId = chatMessage.fromId
             }
 
@@ -124,6 +128,21 @@ class MessengerActivity : AppCompatActivity() {
             })
 
         }
+
+        private fun dec(encryptedData: ByteArray, encryptedIv: ByteArray): String {
+
+            val keyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+            val secretKeyEntry = keyStore.getEntry(ChatLogActivity.KEY_ALIAS, null) as KeyStore.SecretKeyEntry
+            val secretKey = secretKeyEntry.secretKey
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            val spec = GCMParameterSpec(128, encryptedIv)
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, spec)
+
+//        text.text = String(cipher.doFinal(encryptedData))
+            return String(cipher.doFinal(encryptedData))
+        }
+
 
         override fun getLayout(): Int {
             return R.layout.latest_messages_row
